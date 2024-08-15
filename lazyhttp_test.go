@@ -3,7 +3,6 @@ package lazyhttp
 import (
 	"context"
 	"io"
-	"log/slog"
 	"net/http"
 	"testing"
 	"time"
@@ -13,7 +12,7 @@ type mykey string
 
 func TestServer(t *testing.T) {
 	addr := "localhost:8085"
-	s := &HttpService{}
+	s := &HTTPService{}
 	s.Addr = addr
 	s.Handler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		v := r.Context().Value(mykey("key")).(string)
@@ -28,7 +27,7 @@ func TestServer(t *testing.T) {
 	errCh := make(chan error)
 
 	go func() {
-		errCh <- s.Run(ctx, slog.Default())
+		errCh <- s.Run(ctx)
 	}()
 
 	resp, err := http.Get("http://" + addr)
